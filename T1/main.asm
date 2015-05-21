@@ -1,104 +1,96 @@
 .data
 
-	message_first_number: .word 'Insira o primeiro n√∫mero:'
-	message_second_number: .word 'Insira o segundo n√∫mero:'
-	message_operator: .word 'Insira o operador da opera√ß√£o'
-	message_final: .word 'O resultado final da opera√ß√£o √©:'
-	message_error: .word 'O operador n√£o  foi reconhecido:'
+	message_first_number: .ascii "Insira o primeiro numero:"
+	message_second_number: .ascii "Insira o segundo numero:"
+	message_operator: .ascii "Insira o operador da operacao"
+	message_final: .ascii "O resultado final da operacao e:"
+	message_error: .ascii "O operador nao  foi reconhecido:"
 	result: .word 0
-
-	soma: .word '+'
-	subtracao: .word '-'
-	divisao: .word '/'
-	resto: .word '%'
-	multiplicacao: .word '*'
 
 .text
 
-	;###########################################################################
-	;	Leitura dos param√™tros.
-	;###########################################################################
+	###########################################################################
+	#	Leitura dos parametros.
+	###########################################################################
 
-	; Exibindo a mensagem requisitando a inser√ß√£o do primeiro n√∫mero
+	# Exibindo a mensagem requisitando a inserÁ„o do primeiro n˙mero
 	li $v0, 4
 	la $a0, message_first_number
 	syscall
 
-	; Lendo e colocando o primeiro n√∫mero na vari√°vel tempor√°ria t0
-	li $v0, 5 ; number
+	# Lendo e colocando o primeiro n˙mero na vari·vel tempor·ria t0
+	li $v0, 5 # number
 	syscall
 	move $t0, $v0
 
-	; Exibindo a mensagem requisitando a inser√ß√£o do segundo n√∫mero
+	# Exibindo a mensagem requisitando a inserÁ„o do segundo n˙mero
 	la $a0, message_second_number
 	syscall
 
-	; Lendo e colocando o segundo n√∫mero na vari√°vel tempor√°ria t1
-	li $v0, 5 ; number
+	# Lendo e colocando o segundo n˙mero na vari·vel tempor·ria t1
+	li $v0, 5 # number
 	syscall
 	move $t1, $v0
 
-	; Exibindo a mensagem requisitando a inser√ß√£o do operador
+	# Exibindo a mensagem requisitando a inserÁ„o do operador
 	la $a0, message_operator
 	syscall
 
-	; Lendo e colocando o operador na vari√°vel tempor√°ria t2
-	li $v0, 12 ; char
+	# Lendo e colocando o operador na vari·vel tempor·ria t2
+	li $v0, 12 # char
 	syscall
 	move $t2, $v0
 
-	;###########################################################################
-	;	Sele√ß√£o e execu√ß√£o da opera√ß√£o.
-	;###########################################################################
+	############################################################################
+	#	SeleÁ„o e execuÁ„o da operaÁ„o.
+	############################################################################
 
-	; Iniciando o case na primeira valida√ß√£o.
-	; Cada case inicia com uma compara√ß√£o que caso falhe
-	; pula a execu√ß√£o para o pr√≥ximo case.
+	# Iniciando o case na primeira validaÁ„o.
+	# Cada case inicia com uma comparaÁ„o que caso falhe
+	# pula a execuÁ„o para o prÛximo case.
 	j case1
+	
+	addi $t3, $0, 1
+	addi $t4, $0, 2
+	addi $t5, $0, 3
+	addi $t6, $0, 4
 
-	; case soma(+)
+	# case soma(+)
 	case1:
-		bne $t2, soma, case2
+		bne $t2, $t3, case2
 		add $t7, $t0, $t1
 		j exit
 
-	; case subtra√ß√£o(-)
+	# case subtraÁ„o(-)
 	case2:
-		bne $t2, subtracao, case3
+		bne $t2, $t4, case3
 		sub $t7, $t0, $t1
 		j exit
 
-	; case divisao(/)
+	# case divisao(/)
 	case3:
-		bne $t2, divisao, case4
+		bne $t2, $t5, case4
 		div $t0, $t1
 		mflo $t7
 		j exit
 
-	; case resto(%)
+	# case multiplicaÁ„o(*)
 	case4:
-		bne $t2, resto, default
-		div $t0, $t1
-		mfhi $t7
-		j exit
-
-	; case multiplica√ß√£o(*)
-	case5:
-		bne $t2, multiplicacao, default
+		bne $t2, $t6, default
 		mult $t0, $t1
 		mfhi $t7
 		j exit
 
-	; default error
+	# default error
 	default:
 		la $a0, message_error
 		syscall
 
 	exit:
-		; Exibindo a mensagem de apesenta√ß√£o do resultado
+		# Exibindo a mensagem de apesentaÁ„o do resultado
 		la $a0, message_final
 		syscall
 
-		; Exibindo o resultado final do programa
+		# Exibindo o resultado final do programa
 		move $a0, $t7
 		syscall
