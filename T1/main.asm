@@ -24,6 +24,7 @@
 	move $t0, $v0
 
 	# Exibindo a mensagem requisitando a inserção do segundo número
+	li $v0, 4
 	la $a0, message_second_number
 	syscall
 
@@ -33,6 +34,7 @@
 	move $t1, $v0
 
 	# Exibindo a mensagem requisitando a inserção do operador
+	li $v0, 4
 	la $a0, message_operator
 	syscall
 
@@ -45,15 +47,15 @@
 	#	Seleção e execução da operação.
 	############################################################################
 
+	addi $t3, $0, 43 # +
+	addi $t4, $0, 45 # -
+	addi $t5, $0, 47 # /
+	addi $t6, $0, 42 # *
+
 	# Iniciando o case na primeira validação.
 	# Cada case inicia com uma comparação que caso falhe
 	# pula a execução para o próximo case.
 	j case1
-	
-	addi $t3, $0, 1
-	addi $t4, $0, 2
-	addi $t5, $0, 3
-	addi $t6, $0, 4
 
 	# case soma(+)
 	case1:
@@ -83,14 +85,17 @@
 
 	# default error
 	default:
+		li $v0, 4
 		la $a0, message_error
 		syscall
 
 	exit:
 		# Exibindo a mensagem de apesentação do resultado
+		li $v0, 4
 		la $a0, message_final
 		syscall
 
 		# Exibindo o resultado final do programa
-		move $a0, $t7
+		li $v0, 1
+		la $a0, $t7
 		syscall
